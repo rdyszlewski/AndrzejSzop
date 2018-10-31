@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">AndrzejShop</string>
+    <string name="filter">Filtruj</string>
+    <string name="sort">Sortuj</string>
+    <string name="change_view">Zmień widok</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Anuluj</string>
+    <string name="categories">Kategorie</string>
+    <string name="search">Szukaj</string>
+    <string name="promotions">Promocje</string>
+    <string name="buy">Dodaj do koszyka</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
