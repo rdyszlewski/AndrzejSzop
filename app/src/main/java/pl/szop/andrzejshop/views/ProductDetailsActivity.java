@@ -23,7 +23,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_details);
 
         View view = findViewById(R.id.content);
-        BookDetails details = ((MyApplication)getApplication()).getDaoSession().getBookDetailsDao().loadDeep(1L);
+        // TODO sprawdzić jak to będzie ładowane
+        BookDetails details = (BookDetails) MyApplication.instance().getDataProvider().getDetails(1L);
+
 
         ViewAdapter.bindView(view, details);
     }

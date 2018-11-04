@@ -58,6 +58,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         mRules = new HashMap<>();
     }
 
+    public void setItems(List<? extends Product> items){
+        mItems = items;
+        notifyDataSetChanged();
+    }
+
     public void setResource(int resource){
         mResource = resource;
     }

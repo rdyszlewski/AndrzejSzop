@@ -1,10 +1,14 @@
 package pl.szop.andrzejshop;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import java.util.Arrays;
 import java.util.List;
 
+import pl.szop.andrzejshop.data.IDataProvider;
+import pl.szop.andrzejshop.data.database.DatabaseInitializer;
+import pl.szop.andrzejshop.data.database.ProductDAO;
 import pl.szop.andrzejshop.models.Book;
 import pl.szop.andrzejshop.models.BookDetails;
 import pl.szop.andrzejshop.models.BooksImages;
@@ -15,63 +19,67 @@ import pl.szop.andrzejshop.utils.ImageUtils;
 
 public class MyApplication extends Application {
 
-    private DaoSession mDaoSession;
+    public static final int OFFLINE_MODE = 0;
+    public static final int ONLINE_MODE = 1;
+
+    private IDataProvider mDataProvider;
+    private int mCurrentDataMode;
+
+    private SharedPreferences mPreferences;
+
+    private static MyApplication mInstance;
 
     // method starts when the application stars
     @Override
     public void onCreate(){
         super.onCreate();
+        mPreferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
+        setDataProvider(OFFLINE_MODE);
 
-        mDaoSession = new DaoMaster(new DaoMaster.DevOpenHelper(this, "products_db").getWritableDb()).newSession();
+        if(isFirstRun()){
+            DatabaseInitializer.init(((ProductDAO)mDataProvider).getDaoSession(),getApplicationContext());
+            mPreferences.edit().putBoolean("firstrun", false).apply();
+        }
 
-        if(isDatabaseEmpty()){
-            insertDataToDb();
+        mInstance = this;
+    }
+
+    public static MyApplication instance(){
+        return mInstance;
+    }
+
+    public void setDataProvider(int mode){
+        mDataProvider = createDataProvider(mode);
+        mCurrentDataMode = mode;
+    }
+
+    public IDataProvider createDataProvider(int mode){
+        switch (mode){
+            case OFFLINE_MODE:
+                return createOfflineDataProvider();
+                default:
+                    throw new IllegalArgumentException();
         }
     }
 
-    private void insertDataToDb() {
-        Book product1 = new Book("Władca pierścieni", "Tolkien", "Fantastyka", 30.99);
-        Book product2 = new Book("Hyperion", "Simmons", "Science fiction", 99.99);
-        byte[] image = ImageUtils.getBytesFromResource(getApplicationContext(), R.drawable.game);
-        product1.setCover(image);
-        product2.setCover(image);
-
-        mDaoSession.getBookDao().insert(product1);
-        mDaoSession.getBookDao().insert(product2);
-
-        // saving details
-        BookDetails details = new BookDetails();
-        details.setDescription("“Władca Pierścieni” to niesamowita przygoda mówiąca o przyjaźni, poświęceniu i walce o dobro. Przenieś się w świat porywającego Śródziemia, miejsca, gdzie można spotkać nie tylko ludzi, lecz dumne krasnoludy, piękne elfy i, co najważniejsze, dzielne hobbity. Poznaj historię niepozornego niziołka, Froda Bagginsa, na którego barki niespodziewanie spada ogromna odpowiedzialność. Dzięki życzliwości swoich towarzyszy podejmuje się niebezpiecznego zadania i zabiera nas do magicznego świata.");
-        Image image1 = new Image();
-        image1.setMImage(image);
-        Image image2 = new Image();
-        image2.setMImage(image);
-        Image image3 = new Image();
-        image3.setMImage(image);
-
-        mDaoSession.getImageDao().insert(image1);
-        mDaoSession.getImageDao().insert(image2);
-        mDaoSession.getImageDao().insert(image3);
-
-        // to nie działa
-        List<Image> images = Arrays.asList(image1, image2, image3);
-        details.setImages(images);
-
-        details.setBook(product1);
-        mDaoSession.getBookDetailsDao().insert(details);
-
-        BooksImages booksImages = new BooksImages();
-        booksImages.setBook(details.getId());
-        booksImages.setImage(image1.getId());
-        mDaoSession.getBooksImagesDao().insert(booksImages);
+    private IDataProvider createOfflineDataProvider(){
+        DaoSession daoSession = createDaoSession();
+        return new ProductDAO(daoSession);
     }
 
-    private boolean isDatabaseEmpty() {
-        return mDaoSession.getBookDao().loadAll().size() == 0;
+    private DaoSession createDaoSession() {
+        return new DaoMaster(new DaoMaster.DevOpenHelper(this, "products_db").getWritableDb()).newSession();
     }
 
+    public IDataProvider getDataProvider() {
+        return mDataProvider;
+    }
 
-    public DaoSession getDaoSession() {
-        return mDaoSession;
+    public static IDataProvider dataProvider(Application application){
+        return ((MyApplication)application).getDataProvider();
+    }
+
+    private boolean isFirstRun(){
+        return mPreferences.getBoolean("firstrun", true);
     }
 }

@@ -7,16 +7,6 @@ import java.util.Map;
 
 public class Product {
 
-//    private Long mId;
-//
-//    public Long getId(){
-//        return mId;
-//    }
-//
-//    public void setId(Long id){
-//        mId = id;
-//    }
-
     public Map<String, Object> getValues() throws InvocationTargetException, IllegalAccessException {
         Map<String, Object> result = new HashMap<>();
         Class clazz = getClass();

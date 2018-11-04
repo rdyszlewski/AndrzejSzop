@@ -12,6 +12,8 @@ public class BooksImages {
 
     private Long book;
     private Long image;
+
+
     @Generated(hash = 1934316833)
     public BooksImages(Long id, Long book, Long image) {
         this.id = id;

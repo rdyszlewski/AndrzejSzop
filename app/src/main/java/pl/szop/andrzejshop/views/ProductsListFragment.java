@@ -18,12 +18,15 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import pl.szop.andrzejshop.data.Filter;
 import pl.szop.andrzejshop.MyApplication;
 import pl.szop.andrzejshop.R;
 import pl.szop.andrzejshop.actions.AddToCartAction;
 import pl.szop.andrzejshop.adapters.ProductsAdapter;
+import pl.szop.andrzejshop.data.database.ProductDAO;
 import pl.szop.andrzejshop.models.Book;
 import pl.szop.andrzejshop.models.Product;
 import pl.szop.andrzejshop.rules.BoughtRule;
@@ -87,19 +90,22 @@ public class ProductsListFragment extends Fragment {
 
         cProductsList = productList;
         mAdapter = adapter;
+        loadProducts(null); //load all products
     }
 
     @NonNull
     private ProductsAdapter createProductsAdapter(int ITEM_LAYOUT) {
-        List<? extends Product> products = loadProducts();
+//        List<? extends Product> products = loadProducts(null);
+        List<? extends Product> products = new ArrayList<>();
         ProductsAdapter adapter = new ProductsAdapter(getActivity(), ITEM_LAYOUT, products, ()->startDetailsActivity());
         addActions(adapter);
         addRules(adapter);
         return adapter;
     }
 
-    private List<? extends Product> loadProducts() {
-        return ((MyApplication)getActivity().getApplication()).getDaoSession().loadAll(Book.class);
+    public  void loadProducts(Filter filter) {
+        List<? extends Product> products =  MyApplication.instance().getDataProvider().getProducts(filter);
+        mAdapter.setItems(products);
     }
 
     private void addActions(ProductsAdapter adapter) {
@@ -161,6 +167,13 @@ public class ProductsListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void filter(Filter filter){
+        if(filter.getText() != null){
+            List<? extends Product> products = MyApplication.dataProvider(getActivity().getApplication()).getProducts(filter);
+            mAdapter.setItems(products);
+        }
     }
 
     /**
