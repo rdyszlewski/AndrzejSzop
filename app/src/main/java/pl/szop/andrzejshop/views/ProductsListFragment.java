@@ -171,7 +171,7 @@ public class ProductsListFragment extends Fragment {
 
     public void filter(Filter filter){
         if(filter.getText() != null){
-            List<? extends Product> products = MyApplication.dataProvider(getActivity().getApplication()).getProducts(filter);
+            List<? extends Product> products = MyApplication.instance().getDataProvider().getProducts(filter);
             mAdapter.setItems(products);
         }
     }

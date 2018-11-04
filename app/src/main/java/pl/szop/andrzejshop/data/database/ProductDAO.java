@@ -1,13 +1,8 @@
 package pl.szop.andrzejshop.data.database;
 
-import android.app.Application;
-
 import java.util.List;
-
-import pl.szop.andrzejshop.MyApplication;
 import pl.szop.andrzejshop.data.Filter;
 import pl.szop.andrzejshop.data.IDataProvider;
-import pl.szop.andrzejshop.models.BookDetails;
 import pl.szop.andrzejshop.models.DaoSession;
 import pl.szop.andrzejshop.models.Product;
 
@@ -23,6 +18,7 @@ public class ProductDAO implements IDataProvider {
         return mDaoSession;
     }
 
+    @Override
     public  List<? extends Product> getProducts(Filter filter) {
         Class productClass = ProductDAOSettings.PRODUCT_CLASS;
         if(filter == null || filter.isEmpty()){
@@ -33,13 +29,14 @@ public class ProductDAO implements IDataProvider {
         return (List<? extends Product>) mDaoSession.getDao(productClass).queryRaw(where, arguments);
     }
 
+    @Override
     public List<? extends Product> getProducts(){
         return getProducts(null);
     }
 
     @Override
     public Product getDetails(Long id) {
-        return mDaoSession.getBookDetailsDao().loadDeep(id);
+        return ProductDAOSettings.getDetailsDao(mDaoSession).loadDeep(id);
     }
 
     private String createWhere(Filter filter) {

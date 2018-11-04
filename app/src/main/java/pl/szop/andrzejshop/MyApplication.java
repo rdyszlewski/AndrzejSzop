@@ -23,13 +23,11 @@ public class MyApplication extends Application {
     public static final int ONLINE_MODE = 1;
 
     private IDataProvider mDataProvider;
-    private int mCurrentDataMode;
 
     private SharedPreferences mPreferences;
 
     private static MyApplication mInstance;
 
-    // method starts when the application stars
     @Override
     public void onCreate(){
         super.onCreate();
@@ -37,20 +35,24 @@ public class MyApplication extends Application {
         setDataProvider(OFFLINE_MODE);
 
         if(isFirstRun()){
-            DatabaseInitializer.init(((ProductDAO)mDataProvider).getDaoSession(),getApplicationContext());
-            mPreferences.edit().putBoolean("firstrun", false).apply();
+            initApplication();
         }
 
         mInstance = this;
     }
 
+    private void initApplication(){
+        DatabaseInitializer.init(((ProductDAO)mDataProvider).getDaoSession(),getApplicationContext());
+        mPreferences.edit().putBoolean("firstrun", false).apply();
+    }
+
     public static MyApplication instance(){
+        assert mInstance != null;
         return mInstance;
     }
 
     public void setDataProvider(int mode){
         mDataProvider = createDataProvider(mode);
-        mCurrentDataMode = mode;
     }
 
     public IDataProvider createDataProvider(int mode){
@@ -73,10 +75,6 @@ public class MyApplication extends Application {
 
     public IDataProvider getDataProvider() {
         return mDataProvider;
-    }
-
-    public static IDataProvider dataProvider(Application application){
-        return ((MyApplication)application).getDataProvider();
     }
 
     private boolean isFirstRun(){
