@@ -3,6 +3,7 @@ package pl.szop.andrzejshop.models;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.JoinEntity;
+import org.greenrobot.greendao.annotation.JoinProperty;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.ToMany;
 
@@ -27,13 +28,17 @@ public class BookDetails extends Product{
     @Property(nameInDb = "rating")
     private Double rating;
 
-    @ToMany
-    @JoinEntity(
-            entity = BooksImages.class,
-            sourceProperty = "book",
-            targetProperty = "image"
-    )
-    private List<Image> images = new ArrayList<>();
+//    @ToMany
+//    @JoinEntity(
+//            entity = BooksImages.class,
+//            sourceProperty = "book",
+//            targetProperty = "image"
+//    )
+//    private List<Image> images;
+
+    @ToMany(referencedJoinProperty = "productId")
+    private List<Image> images;
+
 
     @Property(nameInDb = "translation")
     private String translation;
@@ -164,23 +169,6 @@ public class BookDetails extends Product{
         this.releaseYear = releaseYear;
     }
 
-    public void setImages(List<Image> images){
-        this.images = images;
-    }
-
-    // getters from Book class
-    public String getTitle(){
-        return book.getTitle();
-    }
-
-    public String getAuthor(){
-        return book.getAuthor();
-    }
-
-    public String getCategory(){
-        return book.getCategory();
-    }
-
     @Generated(hash = 893611298)
     private transient Long book__resolvedKey;
 
@@ -284,7 +272,7 @@ public class BookDetails extends Product{
         myDao = daoSession != null ? daoSession.getBookDetailsDao() : null;
     }
 
-
-
+    /** Used to resolve relations */
    
+
 }

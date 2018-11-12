@@ -4,6 +4,7 @@ import java.util.List;
 import pl.szop.andrzejshop.data.Filter;
 import pl.szop.andrzejshop.data.IDataProvider;
 import pl.szop.andrzejshop.models.DaoSession;
+import pl.szop.andrzejshop.models.Image;
 import pl.szop.andrzejshop.models.Product;
 
 public class ProductDAO implements IDataProvider {
@@ -37,6 +38,11 @@ public class ProductDAO implements IDataProvider {
     @Override
     public Product getDetails(Long id) {
         return ProductDAOSettings.getDetailsDao(mDaoSession).loadDeep(id);
+    }
+
+    @Override
+    public List<Image> getImages(Long productId) {
+        return getDaoSession().getImageDao().queryRaw("WHERE product = ?", new String[]{String.valueOf(productId)});
     }
 
     private String createWhere(Filter filter) {

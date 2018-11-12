@@ -2,11 +2,15 @@ package pl.szop.andrzejshop.adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
+import pl.szop.andrzejshop.models.Image;
 import pl.szop.andrzejshop.models.Product;
 
 public class ViewAdapter {
@@ -31,7 +35,7 @@ public class ViewAdapter {
     }
 
     private static boolean hasChildrenViews(View view) {
-        return view instanceof ViewGroup;
+        return view instanceof ViewGroup && !(view instanceof ViewPager);
     }
 
     private static void setValue(View view, Object value){
@@ -43,6 +47,11 @@ public class ViewAdapter {
             setText(value, (TextView) view);
         } else if (view instanceof ImageView){
             setImage(value, (ImageView) view);
+        } else if (view instanceof ViewPager){
+//            ImageAdapter adapter = new ImageAdapter(view.getContext(), (List<Image>) value);
+//            ((ViewPager)view).setAdapter(adapter);
+        } else {
+            System.out.println();
         }
         // TODO serve another types
     }

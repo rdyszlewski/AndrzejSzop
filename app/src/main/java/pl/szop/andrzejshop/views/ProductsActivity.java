@@ -25,7 +25,6 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
     private Button cFilterButton;
     private Button cSortButton;
     private ImageView cChangeViewButton;
-    private FrameLayout cFragmentContainer;
 
     private Toolbar cToolbar;
 
@@ -56,7 +55,6 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
         cFilterButton = findViewById(R.id.filter_button);
         cSortButton = findViewById(R.id.sort_button);
         cChangeViewButton = findViewById(R.id.change_view_button);
-        cFragmentContainer = findViewById(R.id.products_container);
 
         cChangeViewButton.setOnClickListener(v -> mFragment.changeListLayout());
         // TODO add action to the buttons

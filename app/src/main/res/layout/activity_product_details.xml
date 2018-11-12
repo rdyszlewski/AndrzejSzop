@@ -6,13 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".views.ProductDetailsActivity"
     android:id="@+id/content">
-    <FrameLayout android:id="@+id/images_container"
+    <!--<android.support.v4.view.ViewPager android:id="@+id/images"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="200dp"></android.support.v4.view.ViewPager>-->
+
+    <fragment android:id="@+id/images_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="200dp"
+        android:name="pl.szop.andrzejshop.views.ImagesFragment"></fragment>
     <FrameLayout android:id="@+id/products_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/images_container">
+        app:layout_constraintTop_toBottomOf="@id/images_fragment">
         <include layout="@layout/element_product_details" />
     </FrameLayout>
 
