@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
     }
 
     public interface AdapterListener{
-        void onClick();
+        void onClick(Long productId);
     }
 
     public ProductsAdapter(@NonNull Context context, int resource, List<? extends Product> items, AdapterListener adapterListener) {
@@ -89,13 +90,22 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.from(mContext).inflate(mResource, viewGroup, false);
-        itemView.setOnClickListener(v -> mListener.onClick());
         return new ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Product product = mItems.get(i);
+        viewHolder.getView().setOnClickListener((event)->{
+            if(mListener != null){
+                try {
+                    Long id = (Long) mItems.get(i).getValue("id");
+                    mListener.onClick(id);
+                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         setValues(viewHolder, product);
     }
 
@@ -108,9 +118,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private Map<String, View> mViews = new HashMap<>();
+        private View mView;
 
         ViewHolder(View view){
             super(view);
+            mView = view;
             ViewGroup viewGroup = (ViewGroup) view;
             for(int i=0; i<viewGroup.getChildCount(); i++){
                 View childView = viewGroup.getChildAt(i);
@@ -128,6 +140,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
                     mActions.get(childView.getId()).execute(product, mContext);
                 });
             }
+        }
+
+        public View getView(){
+            return mView;
         }
 
         private boolean isActionComponent(View childView) {

@@ -97,7 +97,7 @@ public class ProductsListFragment extends Fragment {
     private ProductsAdapter createProductsAdapter(int ITEM_LAYOUT) {
 //        List<? extends Product> products = loadProducts(null);
         List<? extends Product> products = new ArrayList<>();
-        ProductsAdapter adapter = new ProductsAdapter(getActivity(), ITEM_LAYOUT, products, ()->startDetailsActivity());
+        ProductsAdapter adapter = new ProductsAdapter(getActivity(), ITEM_LAYOUT, products, productId->startDetailsActivity(productId));
         addActions(adapter);
         addRules(adapter);
         return adapter;
@@ -118,8 +118,9 @@ public class ProductsListFragment extends Fragment {
         adapter.addRule(R.id.buyed, BoughtRule.NAME, true);
     }
 
-    private void startDetailsActivity(){
+    private void startDetailsActivity(Long productId){
         Intent intent = new Intent(getActivity(), ProductDetailsActivity.class);
+        intent.putExtra("id", productId);
         startActivity(intent);
     }
 

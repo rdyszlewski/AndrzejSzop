@@ -35,7 +35,7 @@ public class ViewAdapter {
     }
 
     private static boolean hasChildrenViews(View view) {
-        return view instanceof ViewGroup && !(view instanceof ViewPager);
+        return view instanceof ViewGroup;
     }
 
     private static void setValue(View view, Object value){

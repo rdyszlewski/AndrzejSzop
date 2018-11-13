@@ -169,6 +169,18 @@ public class BookDetails extends Product{
         this.releaseYear = releaseYear;
     }
 
+    public String getTitle(){
+        return book.getTitle();
+    }
+
+    public String getAuthor(){
+        return book.getAuthor();
+    }
+
+    public String getCategory(){
+        return book.getCategory();
+    }
+
     @Generated(hash = 893611298)
     private transient Long book__resolvedKey;
 

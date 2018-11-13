@@ -1,5 +1,6 @@
 package pl.szop.andrzejshop.views;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -26,9 +27,10 @@ public class ProductDetailsActivity extends AppCompatActivity implements ImagesF
         setContentView(R.layout.activity_product_details);
 
         View view = findViewById(R.id.content);
+        Intent intent = getIntent();
+        Long productId = intent.getLongExtra("id", 0L);
 
-        // TODO zrobić odbieranie i pobieranie produktu z określonym id
-        BookDetails details = (BookDetails) MyApplication.instance().getDataProvider().getDetails(1L);
+        BookDetails details = (BookDetails) MyApplication.instance().getDataProvider().getDetails(productId);
         ViewAdapter.bindView(view, details);
         ImagesFragment imagesFragment = (ImagesFragment) getSupportFragmentManager().findFragmentById(R.id.images_fragment);
         imagesFragment.setImages(details.getId(), null);
