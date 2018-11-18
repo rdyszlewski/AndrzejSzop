@@ -10,25 +10,23 @@
         android:id="@+id/title2"
         android:layout_width="349dp"
         android:layout_height="47dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="46dp"
         android:text="Kategorie"
         android:textSize="25dp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="46dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_fantasy"
         android:layout_width="119dp"
         android:layout_height="74dp"
         android:layout_marginStart="55dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginTop="51dp"
         android:background="@color/colorPrimary"
         android:text="Fantasy"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/button_thriller"
-        app:layout_constraintEnd_toStartOf="@+id/button_scifi"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title2" />
 
@@ -36,23 +34,21 @@
         android:id="@+id/button_scifi"
         android:layout_width="119dp"
         android:layout_height="74dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="51dp"
         android:background="@color/colorPrimary"
         android:text="SCI-FI"
-        tools:layout_editor_absoluteX="210dp"
-        tools:layout_editor_absoluteY="93dp" />
+        app:layout_constraintStart_toEndOf="@+id/button_fantasy"
+        app:layout_constraintTop_toBottomOf="@+id/title2" />
 
     <Button
         android:id="@+id/button_thriller"
         android:layout_width="119dp"
         android:layout_height="74dp"
         android:layout_marginStart="55dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="34dp"
-        android:layout_marginBottom="246dp"
+        android:layout_marginTop="23dp"
         android:background="@color/colorPrimary"
         android:text="Thriller"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_criminal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_fantasy" />
 
@@ -60,12 +56,10 @@
         android:id="@+id/button_criminal"
         android:layout_width="119dp"
         android:layout_height="74dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="55dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="23dp"
         android:background="@color/colorPrimary"
         android:text="Criminal"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button_thriller"
         app:layout_constraintTop_toBottomOf="@+id/button_scifi" />
 
