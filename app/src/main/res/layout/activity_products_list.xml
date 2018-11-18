@@ -19,6 +19,14 @@
             android:layout_height="wrap_content"
             android:text="@string/sort"
             android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/cat_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Categories" />
+
         <ImageButton android:id="@+id/change_view_button"
             android:layout_width="50dp"
             android:layout_height="match_parent"

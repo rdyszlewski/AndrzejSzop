@@ -75,11 +75,16 @@ public class ProductsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_products_list, container, false);
-        prepareProductsList(view);
+        String categoryFilter = getArguments().getString("categoryName");
+        String catName = "";
+        if (categoryFilter != null) {
+            catName = categoryFilter;
+        }
+        prepareProductsList(view, catName);
         return view;
     }
 
-    private void prepareProductsList(View view) {
+    private void prepareProductsList(View view, String filterText) {
         final int LIST_RESOURCE = R.id.products_list;
         final int ITEM_LAYOUT = R.layout.item_product_list;
         RecyclerView productList = view.findViewById(LIST_RESOURCE);
@@ -90,7 +95,10 @@ public class ProductsListFragment extends Fragment {
 
         cProductsList = productList;
         mAdapter = adapter;
-        loadProducts(null); //load all products
+
+        Filter filter = new Filter();
+        filter.setText(filterText);
+        loadProducts(filter); //load all products
     }
 
     @NonNull

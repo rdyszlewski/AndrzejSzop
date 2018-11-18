@@ -19,14 +19,18 @@ public class DatabaseInitializer {
 
         Book product1 = new Book("Władca pierścieni", "Tolkien", "Fantastyka", 30.99);
         Book product2 = new Book("Hyperion", "Simmons", "Science fiction", 99.99);
+        Book product3 = new Book("Nie mów nikomu", "Coben", "Thriller", 99.99);
         byte[] image = ImageUtils.getBytesFromResource(context, R.drawable.game);
+        byte[] telnoImage = ImageUtils.getBytesFromResource(context, R.drawable.tellnoone);
         product1.setCover(image);
         product2.setCover(image);
+        product3.setCover(telnoImage);
 
 
 
         daoSession.getBookDao().insert(product1);
         daoSession.getBookDao().insert(product2);
+        daoSession.getBookDao().insert(product3);
 
         // saving details
         BookDetails details = new BookDetails();

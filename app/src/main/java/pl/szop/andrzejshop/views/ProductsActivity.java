@@ -1,5 +1,6 @@
 package pl.szop.andrzejshop.views;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,12 +12,14 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import pl.szop.andrzejshop.MyApplication;
 import pl.szop.andrzejshop.data.Filter;
 import pl.szop.andrzejshop.R;
 
@@ -33,15 +36,42 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
 
     private ProductsListFragment mFragment;
 
-
+    private Button btnCat;
+    private String category = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_list);
 //        createActionBar();
+        Bundle b = getIntent().getExtras();
+        String cat = null;
+        if (b != null) {
+            cat = b.getString("categoryType");
+        }
 
+        if (cat != null) {
+            category = cat;
+        }
+
+        btnCat  = findViewById(R.id.cat_button);
+        btnCat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotToCategoryActivity();
+            }
+        });
         initComponents();
-        loadFragment(new ProductsListFragment());
+
+        Bundle bundle = new Bundle();
+        bundle.putString("categoryName", category);
+        ProductsListFragment prodList = new ProductsListFragment();
+        prodList.setArguments(bundle);
+        loadFragment(prodList);
+
+    }
+    private void gotToCategoryActivity() {
+        Intent intent = new Intent(ProductsActivity.this, CategoryActivity.class);
+        startActivity(intent);
     }
 
     private void createActionBar() {
