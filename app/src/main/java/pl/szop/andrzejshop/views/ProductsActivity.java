@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import pl.szop.andrzejshop.MyApplication;
 import pl.szop.andrzejshop.data.Filter;
@@ -48,9 +49,13 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
         if (b != null) {
             cat = b.getString("categoryType");
         }
-
+        TextView myButton = (TextView) findViewById(R.id.categoryText);
         if (cat != null) {
             category = cat;
+            myButton.setVisibility(View.VISIBLE);
+            myButton.setText("Category: " + cat);
+        } else {
+            myButton.setVisibility(View.GONE);
         }
 
         btnCat  = findViewById(R.id.cat_button);
