@@ -3,6 +3,7 @@ package pl.szop.andrzejshop.data.database;
 import java.util.List;
 import pl.szop.andrzejshop.data.Filter;
 import pl.szop.andrzejshop.data.IDataProvider;
+import pl.szop.andrzejshop.data.Sort;
 import pl.szop.andrzejshop.models.DaoSession;
 import pl.szop.andrzejshop.models.Image;
 import pl.szop.andrzejshop.models.Product;
@@ -22,13 +23,20 @@ public class ProductDAO implements IDataProvider {
     @Override
     public  List<? extends Product> getProducts(Filter filter) {
         Class productClass = ProductDAOSettings.PRODUCT_CLASS;
+        // if filter is empty, load all products
         if(filter == null || filter.isEmpty()){
             return (List<? extends Product>) mDaoSession.getDao(productClass).loadAll();
         }
-        String where = createWhere(filter);
-        String[] arguments = getWhereArguments(filter);
+        // else create where statement and load data from database
+        String where = filter.hasCondition() ? createWhere(filter) : "";
+        String[] arguments = filter.hasCondition()? getWhereArguments(filter) : new String[0];
+
+        if (filter.hasSorting()){
+            where += createOrderBy(filter);
+        }
         return (List<? extends Product>) mDaoSession.getDao(productClass).queryRaw(where, arguments);
     }
+
 
     @Override
     public List<? extends Product> getProducts(){
@@ -56,8 +64,23 @@ public class ProductDAO implements IDataProvider {
                 stringBuilder.append(" OR ");
             }
         }
-
+        // TODO dodać wartości filtrowania
         return stringBuilder.toString();
+    }
+
+    private String createOrderBy(Filter filter) {
+        if (filter.getSort() == null){
+            return "";
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("ORDER BY ");
+        Sort sort = filter.getSort();
+        stringBuilder.append(sort.getName());
+        if(sort.isDesc()){
+            stringBuilder.append(" ").append("DESC");
+        }
+        return stringBuilder.toString();
+
     }
 
     private String[] getWhereArguments(Filter filter){

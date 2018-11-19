@@ -10,6 +10,16 @@
     <string name="promotions">Promocje</string>
     <string name="buy">Dodaj do koszyka</string>
 
+    <string name="sorting">Sortowanie</string>
+    <string name="title_product">Tytuł</string>
+    <string name="author_product">Autor</string>
+    <string name="price_product">Cena</string>
+
+    <string name="asc">rosnąco</string>
+    <string name="desc">malejąco</string>
+
+    <string name="lack">Brak</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_image">ImageActivity</string>

@@ -34,6 +34,4 @@ public class Product {
         Method method = getClass().getMethod("get" + name, null);
         return getValue(method);
     }
-
-    // TODO wstawić ustawianie wartości
 }
