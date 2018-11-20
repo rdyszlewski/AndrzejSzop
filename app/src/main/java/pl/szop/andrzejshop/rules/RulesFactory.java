@@ -8,6 +8,8 @@ public class RulesFactory {
                 return new BoughtRule(negative);
             case InCartRule.NAME:
                 return new InCartRule(negative);
+            case FavoritesRule.NAME:
+                return new FavoritesRule();
                 default:
                     throw new IllegalArgumentException();
         }

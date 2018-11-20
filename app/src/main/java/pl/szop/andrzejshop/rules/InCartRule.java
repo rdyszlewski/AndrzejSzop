@@ -11,6 +11,11 @@ public class InCartRule implements Rule{
     }
 
     @Override
+    public Action getAction() {
+        return Action.VISIBLE;
+    }
+
+    @Override
     public boolean check(Object... objects) {
         return !mNegative;
     }

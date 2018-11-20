@@ -10,6 +10,7 @@ import pl.szop.andrzejshop.models.Book;
 import pl.szop.andrzejshop.models.BookDetails;
 import pl.szop.andrzejshop.models.BooksImages;
 import pl.szop.andrzejshop.models.DaoSession;
+import pl.szop.andrzejshop.models.Favorites;
 import pl.szop.andrzejshop.models.Image;
 import pl.szop.andrzejshop.utils.ImageUtils;
 
@@ -35,6 +36,9 @@ public class DatabaseInitializer {
         // saving details
         BookDetails details = new BookDetails();
         details.setDescription("“Władca Pierścieni” to niesamowita przygoda mówiąca o przyjaźni, poświęceniu i walce o dobro. Przenieś się w świat porywającego Śródziemia, miejsca, gdzie można spotkać nie tylko ludzi, lecz dumne krasnoludy, piękne elfy i, co najważniejsze, dzielne hobbity. Poznaj historię niepozornego niziołka, Froda Bagginsa, na którego barki niespodziewanie spada ogromna odpowiedzialność. Dzięki życzliwości swoich towarzyszy podejmuje się niebezpiecznego zadania i zabiera nas do magicznego świata.");
+
+        Favorites favorites = new Favorites(1L);
+        daoSession.getFavoritesDao().insert(favorites);
 //        Image image1 = new Image();
 //        image1.setMImage(image);
 //        Image image2 = new Image();

@@ -5,6 +5,7 @@ import pl.szop.andrzejshop.data.Filter;
 import pl.szop.andrzejshop.data.IDataProvider;
 import pl.szop.andrzejshop.data.Sort;
 import pl.szop.andrzejshop.models.DaoSession;
+import pl.szop.andrzejshop.models.Favorites;
 import pl.szop.andrzejshop.models.Image;
 import pl.szop.andrzejshop.models.Product;
 
@@ -51,6 +52,28 @@ public class ProductDAO implements IDataProvider {
     @Override
     public List<Image> getImages(Long productId) {
         return getDaoSession().getImageDao().queryRaw("WHERE product = ?", new String[]{String.valueOf(productId)});
+    }
+
+    @Override
+    public boolean isFavorite(Long id) {
+        Favorites favorites = getDaoSession().getFavoritesDao().load(id);
+        return favorites != null;
+    }
+
+    @Override
+    public void setFavorite(Long id, boolean favorite) {
+        Favorites favorites = new Favorites(id);
+        if(favorite){
+            // TODO chyba należało by dodać sprawdzanie, czy taka wartość już nie istnieje w bazie danych
+            getDaoSession().getFavoritesDao().insert(favorites);
+        } else {
+            getDaoSession().getFavoritesDao().delete(favorites);
+        }
+    }
+
+    @Override
+    public List<? extends Product> getFavorites() {
+        return getDaoSession().getFavoritesDao().loadAll();
     }
 
     private String createWhere(Filter filter) {

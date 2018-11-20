@@ -12,6 +12,11 @@ public class BoughtRule implements Rule {
     }
 
     @Override
+    public Action getAction() {
+        return Action.VISIBLE;
+    }
+
+    @Override
     public boolean check(Object... objects) {
         assert objects.length == 1;
         Product product = (Product) objects[0];

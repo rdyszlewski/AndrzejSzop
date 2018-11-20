@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -76,9 +76,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
                 value = product.getValue(view);
             } catch (NoSuchMethodException e) {
                 continue;
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
             }
 
@@ -164,9 +162,19 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             View view = mViews.get(field.toLowerCase());
             if(mRules.containsKey(view.getId())){
                 Product product = mItems.get(getAdapterPosition());
-                boolean visibility = mRules.get(view.getId()).check(product);
-                int visibilityState = visibility ? View.VISIBLE : View.GONE;
-                view.setVisibility(visibilityState);
+                boolean state = mRules.get(view.getId()).check(product);
+                Rule.Action action = mRules.get(view.getId()).getAction();
+                switch (action){
+                    case VISIBLE:
+                        int visibilityState = state ? View.VISIBLE : View.GONE;
+                        view.setVisibility(visibilityState);
+                        break;
+                    case CHECKING:
+                        // TODO dodać sprawdzanie typu
+                        ((CheckBox)view).setChecked(state);
+                        break;
+                }
+
             }
         }
 

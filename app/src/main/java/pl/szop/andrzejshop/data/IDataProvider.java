@@ -11,4 +11,7 @@ public interface IDataProvider {
     List<? extends Product> getProducts();
     Product getDetails(Long id);
     List<Image> getImages(Long productId);
+    boolean isFavorite(Long id);
+    void setFavorite(Long id, boolean favorite);
+    List<? extends Product> getFavorites();
 }

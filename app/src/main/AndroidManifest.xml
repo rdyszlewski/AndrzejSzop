@@ -25,6 +25,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".views.CategoryActivity" />
         <activity android:name=".views.MainActivity" />
+        <activity
+            android:name=".views.FavoritesActivity"
+            android:label="@string/title_activity_favorites"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

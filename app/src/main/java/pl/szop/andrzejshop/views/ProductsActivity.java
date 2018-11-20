@@ -42,7 +42,8 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
 
     private ProductsListFragment mFragment;
 
-    private Button btnCat;
+//    private Button btnCat;
+    private Button cFavoritesButton;
     private String category = "";
 
     private Filter mCurrentFilter;
@@ -67,13 +68,13 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
             myButton.setVisibility(View.GONE);
         }
 
-        btnCat  = findViewById(R.id.cat_button);
-        btnCat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gotToCategoryActivity();
-            }
-        });
+//        btnCat  = findViewById(R.id.cat_button);
+//        btnCat.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                gotToCategoryActivity();
+//            }
+//        });
         initComponents();
 
         Bundle bundle = new Bundle();
@@ -99,10 +100,17 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
         cFilterButton = findViewById(R.id.filter_button);
         cSortButton = findViewById(R.id.sort_button);
         cChangeViewButton = findViewById(R.id.change_view_button);
+        cFavoritesButton = findViewById(R.id.favorites_button);
 
         cSortButton.setOnClickListener(v -> openSortingDialog());
         cChangeViewButton.setOnClickListener(v -> mFragment.changeListLayout());
+        cFavoritesButton.setOnClickListener(v -> startFavoritesActivity());
         // TODO add action to the buttons
+    }
+
+    private void startFavoritesActivity() {
+        Intent intent = new Intent(this, FavoritesActivity.class);
+        startActivity(intent);
     }
 
     private void openSortingDialog(){
