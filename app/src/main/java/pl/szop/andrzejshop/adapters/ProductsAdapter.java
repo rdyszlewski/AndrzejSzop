@@ -73,7 +73,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             viewHolder.checkRules(view);
             Object value = null;
             try {
-                value = product.getValue(view);
+                value = isCustomObject(view) ? getValueFromCustomObject(view, product) :
+                        product.getValue(view);
             } catch (NoSuchMethodException e) {
                 continue;
             } catch (InvocationTargetException | IllegalAccessException e) {
@@ -82,6 +83,24 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
             viewHolder.setValue(view, value);
         }
+    }
+
+    private boolean isCustomObject(String view) {
+        return view.contains(".");
+    }
+
+    private Object getValueFromCustomObject(String viewId, Product product) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        String[] fields = viewId.split("\\.");
+        Product lastProduct = product;
+        for(String field : fields){
+            Object object = lastProduct.getValue(field);
+            if(object instanceof Product){
+                lastProduct = (Product) object;
+            } else {
+                return object;
+            }
+        }
+        return null;
     }
 
     @NonNull

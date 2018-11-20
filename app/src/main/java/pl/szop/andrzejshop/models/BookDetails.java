@@ -177,9 +177,9 @@ public class BookDetails extends Product{
         return book.getAuthor();
     }
 
-    public String getCategory(){
-        return book.getCategory();
-    }
+//    public String getCategory(){
+//        return book.getCategory();
+//    }
 
     @Generated(hash = 893611298)
     private transient Long book__resolvedKey;
