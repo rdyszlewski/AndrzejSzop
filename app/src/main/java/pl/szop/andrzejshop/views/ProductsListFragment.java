@@ -123,7 +123,7 @@ public class ProductsListFragment extends Fragment {
     private void addRules(ProductsAdapter adapter){
         adapter.addRule(R.id.buy_button, BoughtRule.NAME, false);
         adapter.addRule(R.id.price, BoughtRule.NAME, false);
-        adapter.addRule(R.id.buyed, BoughtRule.NAME, true);
+        adapter.addRule(R.id.bought, BoughtRule.NAME, true);
     }
 
     private void startDetailsActivity(Long productId){

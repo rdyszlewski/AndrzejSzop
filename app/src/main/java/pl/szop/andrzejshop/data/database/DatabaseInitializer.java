@@ -9,6 +9,7 @@ import pl.szop.andrzejshop.R;
 import pl.szop.andrzejshop.models.Book;
 import pl.szop.andrzejshop.models.BookDetails;
 import pl.szop.andrzejshop.models.BooksImages;
+import pl.szop.andrzejshop.models.Category;
 import pl.szop.andrzejshop.models.DaoSession;
 import pl.szop.andrzejshop.models.Image;
 import pl.szop.andrzejshop.utils.ImageUtils;
@@ -17,9 +18,16 @@ public class DatabaseInitializer {
 
     public static void init(DaoSession daoSession, Context context){
 
-        Book product1 = new Book("Władca pierścieni", "Tolkien", "Fantastyka", 30.99);
-        Book product2 = new Book("Hyperion", "Simmons", "Science fiction", 99.99);
-        Book product3 = new Book("Nie mów nikomu", "Coben", "Thriller", 99.99);
+        Category category1 = new Category(1L, "thriller");
+        Category category2 = new Category(2L, "fantasy");
+        Category category3 = new Category(3L, "sci_fi");
+        daoSession.getCategoryDao().insert(category1);
+        daoSession.getCategoryDao().insert(category2);
+        daoSession.getCategoryDao().insert(category3);
+
+        Book product1 = new Book("Władca pierścieni", "Tolkien", category2, 30.99);
+        Book product2 = new Book("Hyperion", "Simmons", category3, 99.99);
+        Book product3 = new Book("Nie mów nikomu", "Coben", category1, 99.99);
         byte[] image = ImageUtils.getBytesFromResource(context, R.drawable.game);
         byte[] telnoImage = ImageUtils.getBytesFromResource(context, R.drawable.tellnoone);
         product1.setCover(image);
@@ -31,6 +39,7 @@ public class DatabaseInitializer {
         daoSession.getBookDao().insert(product1);
         daoSession.getBookDao().insert(product2);
         daoSession.getBookDao().insert(product3);
+
 
         // saving details
         BookDetails details = new BookDetails();
