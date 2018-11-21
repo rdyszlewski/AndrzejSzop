@@ -2,9 +2,12 @@ package pl.szop.andrzejshop.actions;
 
 import android.content.Context;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.reflect.InvocationTargetException;
 
 import pl.szop.andrzejshop.MyApplication;
+import pl.szop.andrzejshop.events.RefreshFavoritesEvent;
 import pl.szop.andrzejshop.models.Product;
 
 public class AddToFavoritesAction implements Action {
@@ -13,13 +16,10 @@ public class AddToFavoritesAction implements Action {
 
     @Override
     public void execute(Object object, Context context) {
-        try {
-            Long id = (Long) ((Product)object).getValue("id");
-            // TODO spróbować to zrobić bez pobierania
-            boolean favorites = MyApplication.instance().getDataProvider().isFavorite(id);
-            MyApplication.instance().getDataProvider().setFavorite(id, !favorites);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        Long id = ((Product)object).getId();
+        // TODO spróbować to zrobić bez pobierania
+        boolean favorites = MyApplication.instance().getDataProvider().isFavorite(id);
+        MyApplication.instance().getDataProvider().setFavorite(id, !favorites);
+        EventBus.getDefault().post(new RefreshFavoritesEvent());
     }
 }

@@ -14,9 +14,12 @@ import java.util.List;
 
 import pl.szop.andrzejshop.MyApplication;
 import pl.szop.andrzejshop.R;
+import pl.szop.andrzejshop.actions.AddToCartAction;
+import pl.szop.andrzejshop.actions.AddToFavoritesAction;
 import pl.szop.andrzejshop.adapters.ViewAdapter;
 import pl.szop.andrzejshop.models.BookDetails;
 import pl.szop.andrzejshop.models.Image;
+import pl.szop.andrzejshop.rules.FavoritesRule;
 
 public class ProductDetailsActivity extends AppCompatActivity implements ImagesFragment.OnFragmentInteractionListener {
 
@@ -31,7 +34,11 @@ public class ProductDetailsActivity extends AppCompatActivity implements ImagesF
         Long productId = intent.getLongExtra("id", 0L);
 
         BookDetails details = (BookDetails) MyApplication.instance().getDataProvider().getDetails(productId);
-        ViewAdapter.bindView(view, details);
+        ViewAdapter viewAdapter = new ViewAdapter();
+        viewAdapter.addAction(R.id.buy_button, AddToCartAction.NAME);
+        viewAdapter.addAction(R.id.favorites, AddToFavoritesAction.NAME);
+        viewAdapter.addRule(R.id.favorites, FavoritesRule.NAME, false);
+        viewAdapter.bindView(view, details, true);
         ImagesFragment imagesFragment = (ImagesFragment) getSupportFragmentManager().findFragmentById(R.id.images_fragment);
         imagesFragment.setImages(details.getId(), null);
     }

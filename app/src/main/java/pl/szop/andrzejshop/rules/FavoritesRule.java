@@ -1,7 +1,10 @@
 package pl.szop.andrzejshop.rules;
 
+import java.lang.reflect.InvocationTargetException;
+
 import pl.szop.andrzejshop.MyApplication;
 import pl.szop.andrzejshop.models.Book;
+import pl.szop.andrzejshop.models.Product;
 
 public class FavoritesRule implements Rule {
     public static final String NAME = "FAVORITE";
@@ -13,10 +16,9 @@ public class FavoritesRule implements Rule {
 
     @Override
     public boolean check(Object... objects) {
-        Book book = (Book) objects[0];
-        Long id = book.getId();
-        boolean isFavorite = MyApplication.instance().getDataProvider().isFavorite(id);
-        return isFavorite;
+        Product product = (Product) objects[0];
+        Long id = product.getId();
+        return MyApplication.instance().getDataProvider().isFavorite(id);
     }
 
     @Override

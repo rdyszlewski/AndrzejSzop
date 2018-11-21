@@ -10,6 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +20,7 @@ import pl.szop.andrzejshop.MyApplication;
 import pl.szop.andrzejshop.R;
 import pl.szop.andrzejshop.actions.RemoveFromFavoritesAction;
 import pl.szop.andrzejshop.adapters.ProductsAdapter;
+import pl.szop.andrzejshop.events.RefreshFavoritesEvent;
 import pl.szop.andrzejshop.models.Book;
 import pl.szop.andrzejshop.models.Favorites;
 import pl.szop.andrzejshop.models.Product;
@@ -34,6 +38,13 @@ public class FavoritesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         initComponents();
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe
+    public void refresh(RefreshFavoritesEvent event){
+        // TODO to nie działa, naprawić to
+        cFavoritesList.invalidate();
     }
 
     private void initComponents(){

@@ -35,15 +35,14 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
     private Map<Integer, Action> mActions;
     private Map<Integer, Rule> mRules;
+    private ViewAdapter mViewAdapter = new ViewAdapter();
 
     public void addRule(int elementResource, String ruleName, boolean negative){
-        Rule rule = RulesFactory.getRule(ruleName, negative);
-        mRules.put(elementResource, rule);
+        mViewAdapter.addRule(elementResource, ruleName, negative);
     }
 
     public void addAction(int elementResource, String actionName){
-        Action action = ActionFactory.getAction(actionName);
-        mActions.put(elementResource, action);
+        mViewAdapter.addAction(elementResource, actionName);
     }
 
     public interface AdapterListener{
@@ -69,39 +68,13 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
     }
 
     private void setValues(ViewHolder viewHolder, Product product) {
-        for(String view : viewHolder.getFields()) {
-            viewHolder.checkRules(view);
-            Object value = null;
-            try {
-                value = isCustomObject(view) ? getValueFromCustomObject(view, product) :
-                        product.getValue(view);
-            } catch (NoSuchMethodException e) {
-                continue;
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-
-            viewHolder.setValue(view, value);
+        for(String viewName : viewHolder.getFields()) {
+            View view = viewHolder.mViews.get(viewName.toLowerCase());
+            mViewAdapter.bindView(view, product, false);
+            mViewAdapter.checkRules(view, product);
         }
     }
 
-    private boolean isCustomObject(String view) {
-        return view.contains(".");
-    }
-
-    private Object getValueFromCustomObject(String viewId, Product product) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        String[] fields = viewId.split("\\.");
-        Product lastProduct = product;
-        for(String field : fields){
-            Object object = lastProduct.getValue(field);
-            if(object instanceof Product){
-                lastProduct = (Product) object;
-            } else {
-                return object;
-            }
-        }
-        return null;
-    }
 
     @NonNull
     @Override
@@ -150,6 +123,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             }
         }
 
+        // TODO spróbować wykorzystac funkcję z ViewAdapter
         private void setActions(View childView) {
             if(isActionComponent(childView) && mActions.containsKey(childView.getId())){
                 childView.setOnClickListener(e->{
@@ -175,67 +149,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             String resourceName = mContext.getResources().getResourceName(view.getId());
             int splashIndex = resourceName.indexOf('/');
             return resourceName.substring(splashIndex+1);
-        }
-
-        void checkRules(String field){
-            View view = mViews.get(field.toLowerCase());
-            if(mRules.containsKey(view.getId())){
-                Product product = mItems.get(getAdapterPosition());
-                boolean state = mRules.get(view.getId()).check(product);
-                Rule.Action action = mRules.get(view.getId()).getAction();
-                switch (action){
-                    case VISIBLE:
-                        int visibilityState = state ? View.VISIBLE : View.GONE;
-                        view.setVisibility(visibilityState);
-                        break;
-                    case CHECKING:
-                        // TODO dodać sprawdzanie typu
-                        ((CheckBox)view).setChecked(state);
-                        break;
-                }
-
-            }
-        }
-
-        void setValue(String field, Object value){
-            View view = mViews.get(field.toLowerCase());
-            if(view == null){
-                return;
-            }
-
-            if (view instanceof TextView){
-                setText(value, (TextView) view);
-            } else if (view instanceof ImageView){
-                setImage(value, (ImageView) view);
-            }
-        }
-
-        private void setImage(Object value, ImageView view) {
-            if(value instanceof byte[]){
-                byte[] data = (byte[]) value;
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                view.setImageBitmap(bitmap);
-            }else if(value instanceof Integer){
-                view.setImageResource((Integer) value);
-            } else if (value instanceof Bitmap){
-                view.setImageBitmap((Bitmap) value);
-            }
-        }
-
-        private void setText(Object value, TextView view) {
-            if(value instanceof String){
-                view.setText((String)value);
-            } else if(value instanceof Double) {
-                view.setText(String.valueOf(value));
-            }
-        }
-
-        private Integer getViewId(String name){
-            View view = mViews.get(name.toLowerCase());
-            if(view != null){
-                return view.getId();
-            }
-            return null;
         }
     }
 }

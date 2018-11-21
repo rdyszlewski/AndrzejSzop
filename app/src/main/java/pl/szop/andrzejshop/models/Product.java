@@ -5,7 +5,9 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Product {
+public abstract class Product {
+
+    public abstract Long getId();
 
     public Map<String, Object> getValues() throws InvocationTargetException, IllegalAccessException {
         Map<String, Object> result = new HashMap<>();

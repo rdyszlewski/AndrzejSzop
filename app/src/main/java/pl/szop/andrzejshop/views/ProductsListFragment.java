@@ -27,6 +27,7 @@ import pl.szop.andrzejshop.MyApplication;
 import pl.szop.andrzejshop.R;
 import pl.szop.andrzejshop.actions.AddToCartAction;
 import pl.szop.andrzejshop.adapters.ProductsAdapter;
+import pl.szop.andrzejshop.events.RefreshFavoritesEvent;
 import pl.szop.andrzejshop.models.Product;
 import pl.szop.andrzejshop.rules.BoughtRule;
 import pl.szop.andrzejshop.rules.FavoritesRule;
@@ -101,6 +102,12 @@ public class ProductsListFragment extends Fragment {
         loadProducts(filter); //load all products
     }
 
+    @Subscribe
+    public void refresh(RefreshFavoritesEvent event) {
+        //TODO prawdopodobnie będzie trzeba to zrobić inaczej. Pobrać zmieniony produkt, zamienić na liście i zaktualizować widok
+        cProductsList.invalidate();
+    }
+
     @NonNull
     private ProductsAdapter createProductsAdapter(int ITEM_LAYOUT) {
 //        List<? extends Product> products = loadProducts(null);
@@ -124,7 +131,7 @@ public class ProductsListFragment extends Fragment {
     private void addRules(ProductsAdapter adapter){
         adapter.addRule(R.id.buy_button, BoughtRule.NAME, false);
         adapter.addRule(R.id.price, BoughtRule.NAME, false);
-        adapter.addRule(R.id.buyed, BoughtRule.NAME, true);
+        adapter.addRule(R.id.bought, BoughtRule.NAME, true);
         adapter.addRule(R.id.favorites, FavoritesRule.NAME, false);
     }
 
