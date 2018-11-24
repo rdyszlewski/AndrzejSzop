@@ -32,25 +32,12 @@ public class Favorites extends Product{
     public Favorites() {
     }
 
-
     public Long getId() {
         return this.id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public byte[] getCover(){
-        return book.getCover();
-    }
-
-    public String getTitle(){
-        return book.getTitle();
-    }
-
-    public String getAuthor(){
-        return book.getAuthor();
     }
 
     @Generated(hash = 893611298)

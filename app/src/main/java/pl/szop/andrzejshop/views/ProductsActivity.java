@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +83,12 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
         ProductsListFragment prodList = new ProductsListFragment();
         prodList.setArguments(bundle);
         loadFragment(prodList);
+    }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mFragment.loadProducts(mCurrentFilter);
     }
     private void gotToCategoryActivity() {
         Intent intent = new Intent(ProductsActivity.this, CategoryActivity.class);

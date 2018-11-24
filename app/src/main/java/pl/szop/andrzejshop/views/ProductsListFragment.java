@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ import pl.szop.andrzejshop.MyApplication;
 import pl.szop.andrzejshop.R;
 import pl.szop.andrzejshop.actions.AddToCartAction;
 import pl.szop.andrzejshop.adapters.ProductsAdapter;
-import pl.szop.andrzejshop.events.RefreshFavoritesEvent;
 import pl.szop.andrzejshop.models.Product;
 import pl.szop.andrzejshop.rules.BoughtRule;
 import pl.szop.andrzejshop.rules.FavoritesRule;
@@ -40,9 +38,6 @@ public class ProductsListFragment extends Fragment {
     private ProductsAdapter mAdapter;
 
     public ProductsListFragment() {
-        // Required empty public constructor
-        // Register EventBus methods
-        EventBus.getDefault().register(this);
     }
 
     /**
@@ -99,18 +94,11 @@ public class ProductsListFragment extends Fragment {
 
         Filter filter = new Filter();
         filter.setText(filterText);
-        loadProducts(filter); //load all products
     }
 
-    @Subscribe
-    public void refresh(RefreshFavoritesEvent event) {
-        //TODO prawdopodobnie będzie trzeba to zrobić inaczej. Pobrać zmieniony produkt, zamienić na liście i zaktualizować widok
-        cProductsList.invalidate();
-    }
 
     @NonNull
     private ProductsAdapter createProductsAdapter(int ITEM_LAYOUT) {
-//        List<? extends Product> products = loadProducts(null);
         List<? extends Product> products = new ArrayList<>();
         ProductsAdapter adapter = new ProductsAdapter(getActivity(), ITEM_LAYOUT, products, productId->startDetailsActivity(productId));
         addActions(adapter);

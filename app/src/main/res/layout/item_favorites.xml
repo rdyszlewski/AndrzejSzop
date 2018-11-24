@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <ImageView android:id="@+id/cover"
+    <ImageView android:id="@+id/book.cover"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:maxHeight="150dp"
@@ -13,25 +13,25 @@
         android:adjustViewBounds="true"
         />
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/book.title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Tytul"
-        app:layout_constraintStart_toEndOf="@+id/cover" />
+        app:layout_constraintStart_toEndOf="@+id/book.cover" />
 
     <TextView
-        android:id="@+id/author"
+        android:id="@+id/book.author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Autor"
-        app:layout_constraintStart_toEndOf="@+id/cover"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintStart_toEndOf="@+id/book.cover"
+        app:layout_constraintTop_toBottomOf="@+id/book.title" />
 
     <TextView
-        android:id="@+id/price"
+        android:id="@+id/book.price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -41,8 +41,8 @@
         android:textColor="@color/colorPrice"
         android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cover"
-        app:layout_constraintTop_toBottomOf="@+id/author" />
+        app:layout_constraintStart_toEndOf="@+id/book.cover"
+        app:layout_constraintTop_toBottomOf="@+id/book.author" />
 
     <ImageButton
         android:id="@+id/remove_button"
@@ -54,7 +54,7 @@
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:src="@drawable/shopping"
-        app:layout_constraintBottom_toBottomOf="@+id/cover"
+        app:layout_constraintBottom_toBottomOf="@+id/book.cover"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

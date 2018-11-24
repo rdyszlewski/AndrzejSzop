@@ -4,8 +4,6 @@ import android.content.Context;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.lang.reflect.InvocationTargetException;
-
 import pl.szop.andrzejshop.MyApplication;
 import pl.szop.andrzejshop.events.RefreshFavoritesEvent;
 import pl.szop.andrzejshop.models.Product;
@@ -20,6 +18,6 @@ public class AddToFavoritesAction implements Action {
         // TODO spróbować to zrobić bez pobierania
         boolean favorites = MyApplication.instance().getDataProvider().isFavorite(id);
         MyApplication.instance().getDataProvider().setFavorite(id, !favorites);
-        EventBus.getDefault().post(new RefreshFavoritesEvent());
+        EventBus.getDefault().post(new RefreshFavoritesEvent((Product) object));
     }
 }

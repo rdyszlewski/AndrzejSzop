@@ -63,6 +63,16 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    public void removeItem(Product item){
+        mItems.remove(item);
+        notifyDataSetChanged();
+    }
+
+    public void removeItem(int index){
+        mItems.remove(index);
+        notifyDataSetChanged();
+    }
+
     public void setResource(int resource){
         mResource = resource;
     }
