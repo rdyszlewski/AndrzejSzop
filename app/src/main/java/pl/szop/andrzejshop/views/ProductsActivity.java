@@ -1,5 +1,6 @@
 package pl.szop.andrzejshop.views;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -31,6 +32,8 @@ import pl.szop.andrzejshop.data.criteria.Sort;
 
 public class ProductsActivity extends AppCompatActivity implements ProductsListFragment.OnFragmentInteractionListener {
 
+    private final int FILTER_REQUEST = 1;
+
     private Button cFilterButton;
     private Button cSortButton;
     private ImageView cChangeViewButton;
@@ -46,12 +49,12 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
     private Button cFavoritesButton;
     private String category = "";
 
-    private Criteria mCurrentFilter;
+    private Criteria mCurrentCriteria;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCurrentFilter = new Criteria();
+        mCurrentCriteria = new Criteria();
         setContentView(R.layout.activity_products_list);
 //        createActionBar();
         Bundle b = getIntent().getExtras();
@@ -87,7 +90,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
     @Override
     protected void onResume(){
         super.onResume();
-        mFragment.loadProducts(mCurrentFilter);
+        mFragment.loadProducts(mCurrentCriteria);
     }
     private void gotToCategoryActivity() {
         Intent intent = new Intent(ProductsActivity.this, CategoryActivity.class);
@@ -107,10 +110,16 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
         cChangeViewButton = findViewById(R.id.change_view_button);
         cFavoritesButton = findViewById(R.id.favorites_button);
 
+        cFilterButton.setOnClickListener(v->startFilterActivity());
         cSortButton.setOnClickListener(v -> openSortingDialog());
         cChangeViewButton.setOnClickListener(v -> mFragment.changeListLayout());
         cFavoritesButton.setOnClickListener(v -> startFavoritesActivity());
-        // TODO add action to the buttons
+    }
+
+    private void startFilterActivity() {
+        Intent intent = new Intent(this, FilterActivity.class);
+        intent.putExtra("criteria", mCurrentCriteria);
+        startActivityForResult(intent, FILTER_REQUEST);
     }
 
     private void startFavoritesActivity() {
@@ -120,12 +129,12 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
 
     private void openSortingDialog(){
         List<Sort> sortingOptions = getSortingOptions();
-        int currentSortingOptions = getCurrentSortingOptions(sortingOptions, mCurrentFilter);
+        int currentSortingOptions = getCurrentSortingOptions(sortingOptions, mCurrentCriteria);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.sorting));
         builder.setSingleChoiceItems(new SortingAdapter(this, sortingOptions, android.R.layout.select_dialog_singlechoice), currentSortingOptions, (dialog, which) -> {
-            Criteria filter = mCurrentFilter;
+            Criteria filter = mCurrentCriteria;
             filter.setSorting(sortingOptions.get(which));
             mFragment.loadProducts(filter);
             dialog.dismiss();
@@ -181,7 +190,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Criteria filter = mCurrentFilter;
+                Criteria filter = mCurrentCriteria;
                 filter.setText(query);
                 mFragment.loadProducts(filter);
                 return false;
@@ -199,5 +208,16 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
     @Override
     public void onFragmentInteraction(Uri uri) {
         // TODO
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == FILTER_REQUEST) {
+            if(resultCode == Activity.RESULT_OK){
+                Criteria criteria = data.getParcelableExtra("result");
+                mCurrentCriteria = criteria;
+                mFragment.filter(criteria);
+            }
+        }
     }
 }

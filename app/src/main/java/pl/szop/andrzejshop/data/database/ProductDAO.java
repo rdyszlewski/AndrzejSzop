@@ -7,6 +7,7 @@ import pl.szop.andrzejshop.data.criteria.Criteria;
 import pl.szop.andrzejshop.data.IDataProvider;
 import pl.szop.andrzejshop.data.criteria.Filter;
 import pl.szop.andrzejshop.data.criteria.Sort;
+import pl.szop.andrzejshop.models.Category;
 import pl.szop.andrzejshop.models.DaoSession;
 import pl.szop.andrzejshop.models.Favorites;
 import pl.szop.andrzejshop.models.Image;
@@ -79,6 +80,11 @@ public class ProductDAO implements IDataProvider {
         return getDaoSession().getFavoritesDao().loadAll();
     }
 
+    @Override
+    public List<Category> getCategories() {
+        return getDaoSession().getCategoryDao().loadAll();
+    }
+
     private String createWhere(Criteria filter) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("WHERE ");
@@ -88,7 +94,9 @@ public class ProductDAO implements IDataProvider {
         if(filter.hasText() && !filtersConditions.isEmpty()){
             stringBuilder.append(" AND ");
         }
-        stringBuilder.append(getTextConditions());
+        if(filter.hasText()){
+            stringBuilder.append(getTextConditions());
+        }
 
         return stringBuilder.toString();
     }
