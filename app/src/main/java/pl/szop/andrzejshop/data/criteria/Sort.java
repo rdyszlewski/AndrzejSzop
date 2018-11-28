@@ -1,4 +1,4 @@
-package pl.szop.andrzejshop.data;
+package pl.szop.andrzejshop.data.criteria;
 
 import java.util.Objects;
 

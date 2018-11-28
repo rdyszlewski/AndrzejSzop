@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.szop.andrzejshop.actions.AddToFavoritesAction;
-import pl.szop.andrzejshop.data.Filter;
+import pl.szop.andrzejshop.data.criteria.Criteria;
 import pl.szop.andrzejshop.MyApplication;
 import pl.szop.andrzejshop.R;
 import pl.szop.andrzejshop.actions.AddToCartAction;
@@ -92,7 +92,7 @@ public class ProductsListFragment extends Fragment {
         cProductsList = productList;
         mAdapter = adapter;
 
-        Filter filter = new Filter();
+        Criteria filter = new Criteria();
         filter.setText(filterText);
     }
 
@@ -106,7 +106,7 @@ public class ProductsListFragment extends Fragment {
         return adapter;
     }
 
-    public  void loadProducts(Filter filter) {
+    public  void loadProducts(Criteria filter) {
         List<? extends Product> products =  MyApplication.instance().getDataProvider().getProducts(filter);
         mAdapter.setItems(products);
     }
@@ -175,7 +175,7 @@ public class ProductsListFragment extends Fragment {
         mListener = null;
     }
 
-    public void filter(Filter filter){
+    public void filter(Criteria filter){
         if(filter.getText() != null){
             List<? extends Product> products = MyApplication.instance().getDataProvider().getProducts(filter);
             mAdapter.setItems(products);

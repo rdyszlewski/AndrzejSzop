@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import pl.szop.andrzejshop.R;
-import pl.szop.andrzejshop.data.Sort;
+import pl.szop.andrzejshop.data.criteria.Sort;
 import pl.szop.andrzejshop.utils.ResourceUtils;
 
 public class SortingAdapter extends ArrayAdapter {

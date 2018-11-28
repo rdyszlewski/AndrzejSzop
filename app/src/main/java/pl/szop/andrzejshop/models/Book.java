@@ -6,6 +6,7 @@ import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.ToOne;
 import org.greenrobot.greendao.DaoException;
+import org.greenrobot.greendao.annotation.NotNull;
 
 @Entity(nameInDb = "books")
 public class Book extends Product {
@@ -19,7 +20,10 @@ public class Book extends Product {
     @Property(nameInDb = "author")
     private String author;
 
-    @ToOne(joinProperty = "id")
+    @Property(nameInDb = "category")
+    private long categoryId;
+
+    @ToOne(joinProperty = "categoryId")
     private Category category;
 
     @Property(nameInDb = "price")
@@ -53,12 +57,13 @@ public class Book extends Product {
         setPrice(price);
     }
 
-    @Generated(hash = 1903199057)
-    public Book(Long id, String title, String author, Double price,
+    @Generated(hash = 198743730)
+    public Book(Long id, String title, String author, long categoryId, Double price,
             Double promotionalPrice, byte[] cover) {
         this.id = id;
         this.title = title;
         this.author = author;
+        this.categoryId = categoryId;
         this.price = price;
         this.promotionalPrice = promotionalPrice;
         this.cover = cover;
@@ -113,9 +118,9 @@ public class Book extends Product {
     }
 
     /** To-one relationship, resolved on first access. */
-    @Generated(hash = 1152182047)
+    @Generated(hash = 234631651)
     public Category getCategory() {
-        Long __key = this.id;
+        long __key = this.categoryId;
         if (category__resolvedKey == null || !category__resolvedKey.equals(__key)) {
             final DaoSession daoSession = this.daoSession;
             if (daoSession == null) {
@@ -132,12 +137,16 @@ public class Book extends Product {
     }
 
     /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 1178303271)
-    public void setCategory(Category category) {
+    @Generated(hash = 1927364589)
+    public void setCategory(@NotNull Category category) {
+        if (category == null) {
+            throw new DaoException(
+                    "To-one property 'categoryId' has not-null constraint; cannot set to-one to null");
+        }
         synchronized (this) {
             this.category = category;
-            id = category == null ? null : category.getId();
-            category__resolvedKey = id;
+            categoryId = category.getId();
+            category__resolvedKey = categoryId;
         }
     }
 
@@ -175,6 +184,14 @@ public class Book extends Product {
             throw new DaoException("Entity is detached from DAO context");
         }
         myDao.update(this);
+    }
+
+    public long getCategoryId() {
+        return this.categoryId;
+    }
+
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
     }
 
     /** called by internal mechanisms, do not call yourself. */

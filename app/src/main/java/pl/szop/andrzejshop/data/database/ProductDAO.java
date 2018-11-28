@@ -1,9 +1,12 @@
 package pl.szop.andrzejshop.data.database;
 
+import java.util.ArrayList;
 import java.util.List;
-import pl.szop.andrzejshop.data.Filter;
+
+import pl.szop.andrzejshop.data.criteria.Criteria;
 import pl.szop.andrzejshop.data.IDataProvider;
-import pl.szop.andrzejshop.data.Sort;
+import pl.szop.andrzejshop.data.criteria.Filter;
+import pl.szop.andrzejshop.data.criteria.Sort;
 import pl.szop.andrzejshop.models.DaoSession;
 import pl.szop.andrzejshop.models.Favorites;
 import pl.szop.andrzejshop.models.Image;
@@ -22,18 +25,18 @@ public class ProductDAO implements IDataProvider {
     }
 
     @Override
-    public  List<? extends Product> getProducts(Filter filter) {
+    public  List<? extends Product> getProducts(Criteria criteria) {
         Class productClass = ProductDAOSettings.PRODUCT_CLASS;
         // if filter is empty, load all products
-        if(filter == null || filter.isEmpty()){
+        if(criteria == null || criteria.isEmpty()){
             return (List<? extends Product>) mDaoSession.getDao(productClass).loadAll();
         }
         // else create where statement and load data from database
-        String where = filter.hasCondition() ? createWhere(filter) : "";
-        String[] arguments = filter.hasCondition()? getWhereArguments(filter) : new String[0];
+        String where = criteria.hasConditions() ? createWhere(criteria) : "";
+        String[] arguments = criteria.hasConditions()? getWhereArguments(criteria) : new String[0];
 
-        if (filter.hasSorting()){
-            where += createOrderBy(filter);
+        if (criteria.hasSorting()){
+            where += createOrderBy(criteria);
         }
         return (List<? extends Product>) mDaoSession.getDao(productClass).queryRaw(where, arguments);
     }
@@ -76,9 +79,22 @@ public class ProductDAO implements IDataProvider {
         return getDaoSession().getFavoritesDao().loadAll();
     }
 
-    private String createWhere(Filter filter) {
+    private String createWhere(Criteria filter) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("WHERE ");
+
+        String filtersConditions = getFilterConditions(filter);
+        stringBuilder.append(filtersConditions);
+        if(filter.hasText() && !filtersConditions.isEmpty()){
+            stringBuilder.append(" AND ");
+        }
+        stringBuilder.append(getTextConditions());
+
+        return stringBuilder.toString();
+    }
+
+    private String getTextConditions(){
+        StringBuilder stringBuilder = new StringBuilder();
         String[] whereColumns = ProductDAOSettings.SEARCH_COLUMN;
         for(int i=0; i<whereColumns.length; i++){
             stringBuilder.append(whereColumns[i]);
@@ -87,14 +103,41 @@ public class ProductDAO implements IDataProvider {
                 stringBuilder.append(" OR ");
             }
         }
-        // TODO dodać wartości filtrowania
         return stringBuilder.toString();
     }
 
-    private String createOrderBy(Filter filter) {
-        if (filter.getSort() == null){
-            return "";
+    private String getFilterConditions(Criteria criteria) {
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean firstCondition = true;
+        for(Filter filter : criteria.getFilters()) {
+            if(!firstCondition){
+                stringBuilder.append(" AND ");
+            }
+            firstCondition = false;
+
+            stringBuilder.append(filter.getField());
+            stringBuilder.append(getOption(filter.getOption()));
+            stringBuilder.append("?");
         }
+        return stringBuilder.toString();
+    }
+
+    private String getOption(Filter.Option option) {
+        switch (option){
+            case EQUAL:
+                return " = ";
+            case IN:
+                return " IN ";
+            case LESS:
+                return " < ";
+            case GREATER:
+                return " > ";
+                default:
+                throw new IllegalArgumentException("Unknown filter option");
+        }
+    }
+
+    private String createOrderBy(Criteria filter) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("ORDER BY ");
         Sort sort = filter.getSort();
@@ -103,16 +146,27 @@ public class ProductDAO implements IDataProvider {
             stringBuilder.append(" ").append("DESC");
         }
         return stringBuilder.toString();
-
     }
 
-    private String[] getWhereArguments(Filter filter){
-        String[] arguments = new String[ProductDAOSettings.SEARCH_COLUMN.length];
-        String filterText = "%"+filter.getText()+"%";
-        for(int i=0; i < arguments.length; i++){
-            arguments[i] = filterText;
+    private String[] getWhereArguments(Criteria criteria){
+        List<String> arguments = new ArrayList<>();
+        if(criteria.hasFilters()) {
+            List<String> filterArguments = new ArrayList<>();
+            for(Filter filter : criteria.getFilters()) {
+                filterArguments.add(filter.getValue().toString());
+            }
+            arguments.addAll(filterArguments);
+        }
+        if(criteria.hasText()) {
+            int searchArgumentsSize = ProductDAOSettings.SEARCH_COLUMN.length;
+            String filterText = "%"+criteria.getText()+"%";
+            List<String> searchArguments = new ArrayList<>();
+            for(int i=0; i<searchArgumentsSize; i++){
+                searchArguments.add(filterText);
+            }
+            arguments.addAll(searchArguments);
         }
 
-        return arguments;
+        return arguments.toArray(new String[0]);
     }
 }

@@ -20,15 +20,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import pl.szop.andrzejshop.adapters.SortingAdapter;
-import pl.szop.andrzejshop.data.Filter;
+import pl.szop.andrzejshop.data.criteria.Criteria;
 import pl.szop.andrzejshop.R;
-import pl.szop.andrzejshop.data.Sort;
+import pl.szop.andrzejshop.data.criteria.Sort;
 
 public class ProductsActivity extends AppCompatActivity implements ProductsListFragment.OnFragmentInteractionListener {
 
@@ -47,12 +46,12 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
     private Button cFavoritesButton;
     private String category = "";
 
-    private Filter mCurrentFilter;
+    private Criteria mCurrentFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCurrentFilter = new Filter();
+        mCurrentFilter = new Criteria();
         setContentView(R.layout.activity_products_list);
 //        createActionBar();
         Bundle b = getIntent().getExtras();
@@ -126,7 +125,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.sorting));
         builder.setSingleChoiceItems(new SortingAdapter(this, sortingOptions, android.R.layout.select_dialog_singlechoice), currentSortingOptions, (dialog, which) -> {
-            Filter filter = mCurrentFilter;
+            Criteria filter = mCurrentFilter;
             filter.setSorting(sortingOptions.get(which));
             mFragment.loadProducts(filter);
             dialog.dismiss();
@@ -134,7 +133,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
         builder.create().show();
     }
 
-    private int getCurrentSortingOptions(List<Sort> sortingOptions, Filter currentFilter){
+    private int getCurrentSortingOptions(List<Sort> sortingOptions, Criteria currentFilter){
         Sort currentSort = currentFilter.getSort();
         Sort sort;
         for(int i=0; i<sortingOptions.size(); i++){
@@ -182,7 +181,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListF
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Filter filter = mCurrentFilter;
+                Criteria filter = mCurrentFilter;
                 filter.setText(query);
                 mFragment.loadProducts(filter);
                 return false;
